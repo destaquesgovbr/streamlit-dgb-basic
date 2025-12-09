@@ -99,7 +99,7 @@ Este app está deployado na **Plataforma Streamlit DGB** via Cloud Run.
 
 ### URL da Aplicação
 
-🌐 **[Será preenchida após deploy]**
+🌐 **https://streamlit-dgb-basic-klvx64dufq-rj.a.run.app**
 
 ---
 
