@@ -1,0 +1,15 @@
+# Metadados da aplicação para o catálogo DGB
+name: "Nome da Aplicação"
+description: "Breve descrição do que este app faz"
+owner:
+  name: "Nome do Time/Pessoa"
+  email: "owner@example.com"
+category: "analytics"  # analytics, visualization, exploration, admin
+tags:
+  - "tag1"
+  - "tag2"
+keywords: "palavras, chave, busca"
+icon: "📊"
+version: "1.0.0"
+repository: "https://github.com/destaquesgovbr/streamlit-my-app"
+documentation: "https://github.com/destaquesgovbr/streamlit-my-app/blob/main/README.md"
