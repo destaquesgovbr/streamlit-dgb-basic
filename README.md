@@ -1,10 +1,31 @@
-# Streamlit Boilerplate - Plataforma DGB
+# Análise de Notícias GovBR
 
-Template repository para criar aplicações Streamlit na Plataforma DGB (Destaques do Governo Brasileiro).
+Dashboard interativo para análise temporal de notícias do portal gov.br por agência governamental.
 
-## Sobre este Template
+**🚀 Criado a partir do** [streamlit-boilerplate](https://github.com/destaquesgovbr/streamlit-boilerplate)
 
-Este é um template pronto para uso que fornece a estrutura básica para desenvolver e deployar aplicações Streamlit na infraestrutura DGB no Google Cloud Platform.
+---
+
+## Sobre
+
+Este aplicativo Streamlit permite explorar e analisar notícias publicadas em diferentes agências do governo brasileiro, extraídas do portal [gov.br](https://www.gov.br).
+
+### Funcionalidades
+
+- 📊 **Análise temporal**: Visualize notícias por ano, mês, semana ou dia
+- 🏛️ **Filtro por agências**: Selecione agências governamentais específicas
+- 📈 **Visualizações interativas**: Gráficos com Altair
+- 📰 **Listagem detalhada**: Tabela com artigos filtrados
+- 🔍 **Ranking de agências**: Veja as agências mais ativas
+
+### Dados
+
+Dataset hospedado no HuggingFace:
+- **Dataset completo**: [`nitaibezerra/govbrnews`](https://huggingface.co/datasets/nitaibezerra/govbrnews)
+- **Dataset reduzido**: [`nitaibezerra/govbrnews-reduced`](https://huggingface.co/datasets/nitaibezerra/govbrnews-reduced) (usado neste app)
+- **Scraper**: https://github.com/nitaibezerra/govbrnews-scraper
+
+---
 
 ## Desenvolvimento Local
 
@@ -15,10 +36,10 @@ Este é um template pronto para uso que fornece a estrutura básica para desenvo
 
 ### Instalação
 
-1. Clone este repositório (ou use "Use this template" no GitHub):
+1. Clone este repositório:
    ```bash
-   git clone https://github.com/destaquesgovbr/streamlit-boilerplate.git
-   cd streamlit-boilerplate
+   git clone https://github.com/destaquesgovbr/streamlit-dgb-basic.git
+   cd streamlit-dgb-basic
    ```
 
 2. Instale as dependências:
@@ -33,13 +54,22 @@ Este é um template pronto para uso que fornece a estrutura básica para desenvo
 
 4. Acesse `http://localhost:8501` no navegador
 
-### Desenvolvimento
+### Estrutura do Projeto
 
-- Código da aplicação: `app/main.py`
-- Componentes reutilizáveis: `app/components/`
-- Funções auxiliares: `app/utils/`
-- Configuração do Streamlit: `.streamlit/config.toml`
-- Metadados do app: `.streamlit-app.yaml`
+```
+streamlit-dgb-basic/
+├── app/
+│   ├── main.py              # Aplicação principal com análise de notícias
+│   ├── components/          # Componentes reutilizáveis
+│   └── utils/               # Funções auxiliares
+├── tests/
+│   └── test_app.py          # Testes
+├── .streamlit/
+│   └── config.toml          # Configuração do Streamlit
+├── .streamlit-app.yaml      # Metadados para catálogo
+├── Dockerfile               # Container definition
+└── requirements.txt         # Dependências Python
+```
 
 ### Testes
 
@@ -50,143 +80,102 @@ pip install -r requirements-dev.txt
 # Rodar testes
 pytest
 
-# Rodar testes com cobertura
+# Rodar com cobertura
 pytest --cov=app tests/
 ```
 
+---
+
 ## Deploy na Plataforma DGB
 
-### 1. Registrar o App
+Este app está deployado na **Plataforma Streamlit DGB** via Cloud Run.
 
-1. Abra um issue no repositório [destaquesgovbr-infra](https://github.com/destaquesgovbr/destaquesgovbr-infra/issues/new?template=register-streamlit-app.md)
-2. Preencha os dados da aplicação:
-   - Nome do app (slug, ex: `budget-analysis`)
-   - Nome do repositório
-   - Descrição
-   - Resource tier (small/medium/large)
-   - Tipo de service account (compartilhada/dedicada)
+### Status do Deploy
 
-3. Aguarde a aprovação e merge do PR automático
+- ✅ **Repositório**: https://github.com/destaquesgovbr/streamlit-dgb-basic
+- 🔄 **Deploy**: Automático via GitHub Actions (push to main)
+- ☁️ **Hospedagem**: Google Cloud Run
+- 🔐 **Acesso**: Público via URL
 
-### 2. Configurar Secrets do GitHub
+### URL da Aplicação
 
-Após o merge e apply do Terraform, você receberá os valores para configurar os seguintes secrets no seu repositório:
+🌐 **[Será preenchida após deploy]**
 
-- `GCP_WORKLOAD_IDENTITY_PROVIDER`
-- `GCP_SERVICE_ACCOUNT`
+---
 
-Para adicionar secrets:
-1. Vá em Settings → Secrets and variables → Actions
-2. Clique em "New repository secret"
-3. Adicione os dois secrets acima
+## Tecnologias
 
-### 3. Configurar Nome do App
+- **Streamlit 1.41.0**: Framework para dashboards interativos
+- **HuggingFace Datasets 3.2.0**: Carregamento de dados
+- **Altair 5.2.0**: Visualizações declarativas
+- **Pandas 2.2.0**: Manipulação de dados
 
-Edite o arquivo `.github/workflows/build-deploy.yml` e altere a variável `APP_NAME` para o nome registrado no passo 1:
+---
 
-```yaml
-env:
-  APP_NAME: seu-app-name  # Altere aqui
-```
+## Como Funciona
 
-### 4. Atualizar Metadados
+1. **Carregamento de Dados**: Dataset `nitaibezerra/govbrnews-reduced` é carregado do HuggingFace e cacheado por 6 horas
+2. **Seleção de Agências**: Multiselect permite filtrar agências de interesse
+3. **Granularidade Temporal**: Escolha entre ano, mês, semana ou dia
+4. **Filtro de Período**: Slider para selecionar intervalo de datas
+5. **Visualizações**:
+   - Gráfico de linha com total de notícias ao longo do tempo
+   - Gráfico comparativo por agência (top N agências)
+   - Tabela com artigos ordenados por data
 
-Edite o arquivo `.streamlit-app.yaml` com as informações da sua aplicação:
+---
 
-```yaml
-name: "Nome da Sua Aplicação"
-description: "Descrição clara do que o app faz"
-owner:
-  name: "Seu Nome/Time"
-  email: "seu-email@exemplo.com"
-# ... outros campos
-```
-
-### 5. Deploy Automático
-
-Faça push para a branch `main`:
-
-```bash
-git add .
-git commit -m "Configure app for DGB platform"
-git push origin main
-```
-
-O GitHub Actions irá automaticamente:
-1. Construir a imagem Docker
-2. Fazer push para o Artifact Registry
-3. Fazer deploy no Cloud Run
-4. Exibir a URL pública do app
-
-### 6. Acesso a Secrets (Opcional)
-
-Se seu app precisa acessar secrets do Secret Manager:
-
-1. Abra um issue em [destaquesgovbr-infra](https://github.com/destaquesgovbr/destaquesgovbr-infra/issues/new?template=request-secret-access.md)
-2. Especifique quais secrets seu app precisa acessar
-3. Aguarde aprovação e apply do Terraform
-
-Para usar secrets no código:
+## Exemplo de Uso
 
 ```python
-from google.cloud import secretmanager
-
-client = secretmanager.SecretManagerServiceClient()
-secret_name = f"projects/inspire-7-finep/secrets/my-secret/versions/latest"
-response = client.access_secret_version(request={"name": secret_name})
-secret_value = response.payload.data.decode("UTF-8")
+# O app usa cache do Streamlit para performance
+@st.cache_data(ttl=3600 * 6)  # Cache por 6 horas
+def load_data() -> pd.DataFrame:
+    dataset = load_dataset("nitaibezerra/govbrnews-reduced", split="train")
+    df = pd.DataFrame(dataset)
+    # ... processamento temporal
+    return df
 ```
 
-## Estrutura do Projeto
+---
 
-```
-streamlit-boilerplate/
-├── .github/
-│   └── workflows/
-│       └── build-deploy.yml    # CI/CD workflow
-├── app/
-│   ├── __init__.py
-│   ├── main.py                 # Aplicação principal
-│   ├── components/             # Componentes reutilizáveis
-│   │   └── __init__.py
-│   └── utils/                  # Funções auxiliares
-│       └── __init__.py
-├── tests/
-│   ├── __init__.py
-│   └── test_app.py             # Testes
-├── .streamlit/
-│   └── config.toml             # Configuração do Streamlit
-├── .streamlit-app.yaml         # Metadados para catálogo
-├── Dockerfile                  # Container definition
-├── requirements.txt            # Dependências Python
-├── requirements-dev.txt        # Dependências de desenvolvimento
-├── .dockerignore
-├── .gitignore
-└── README.md
-```
+## Contribuindo
 
-## Resource Tiers
+Este app foi criado como validação da Plataforma Streamlit DGB (Fase 1 do plano de implementação).
 
-Escolha o tier adequado para sua aplicação:
+Para contribuir:
+1. Fork o repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Add nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
 
-| Tier | CPU | Memória | Max Instâncias | Uso Recomendado |
-|------|-----|---------|----------------|-----------------|
-| small | 1 | 512MB | 3 | Apps leves, dashboards simples |
-| medium | 1 | 1GB | 5 | Apps moderados, processamento leve |
-| large | 2 | 2GB | 10 | Apps pesados, ML, processamento intenso |
-
-## Documentação Adicional
-
-- [Plataforma Streamlit DGB - Overview](https://github.com/destaquesgovbr/destaquesgovbr-infra/blob/main/docs/streamlit-platform.md)
-- [Streamlit Documentation](https://docs.streamlit.io/)
-- [Cloud Run Documentation](https://cloud.google.com/run/docs)
-
-## Suporte
-
-Para problemas ou dúvidas:
-1. Consulte a [documentação da plataforma](https://github.com/destaquesgovbr/destaquesgovbr-infra/blob/main/docs/streamlit-platform.md)
-2. Abra um issue em [destaquesgovbr-infra](https://github.com/destaquesgovbr/destaquesgovbr-infra/issues)
+---
 
 ## Licença
 
-MIT License - veja [LICENSE](LICENSE) para detalhes.
+MIT License - ver [LICENSE](LICENSE) para detalhes.
+
+---
+
+## Links Úteis
+
+- **Plataforma Streamlit DGB**: [destaquesgovbr-infra](https://github.com/destaquesgovbr/destaquesgovbr-infra)
+- **Template Boilerplate**: [streamlit-boilerplate](https://github.com/destaquesgovbr/streamlit-boilerplate)
+- **Catálogo de Apps**: [streamlit-catalog](https://destaquesgovbr.github.io/streamlit-catalog/)
+- **Documentação**: [docs/streamlit-platform.md](https://github.com/destaquesgovbr/destaquesgovbr-infra/blob/main/docs/streamlit-platform.md)
+
+---
+
+## Case Study
+
+Este app faz parte da **Fase 1** do plano de implementação da Plataforma Streamlit DGB, servindo como validação end-to-end de todo o processo:
+
+- ✅ Uso do template boilerplate
+- ✅ Migração de app existente
+- ✅ Registro via issue template
+- ✅ PR automatizado
+- ✅ Deploy no Cloud Run
+- ✅ Integração com HuggingFace
+
+Para mais detalhes, veja [STREAMLIT_PLATFORM_PLAN_2.md](https://github.com/destaquesgovbr/destaquesgovbr-infra/blob/main/STREAMLIT_PLATFORM_PLAN_2.md).
