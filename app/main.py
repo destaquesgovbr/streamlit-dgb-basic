@@ -34,6 +34,7 @@ class GovBRNewsAnalysis:
         dataset = load_dataset("nitaibezerra/govbrnews-reduced", split="train")
         df = pd.DataFrame(dataset)
         df["published_at"] = pd.to_datetime(df["published_at"])
+        df = df.dropna(subset=["published_at"])
         df["year"] = df["published_at"].dt.year
         df["month"] = df["published_at"].dt.to_period("M").dt.to_timestamp()
         df["week"] = df["published_at"].dt.to_period("W").dt.to_timestamp()
