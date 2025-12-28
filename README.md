@@ -154,7 +154,7 @@ Para contribuir:
 
 ## Licença
 
-MIT License - ver [LICENSE](LICENSE) para detalhes.
+AGPL-3.0 License - ver [LICENSE](LICENSE) para detalhes.
 
 ---
 
